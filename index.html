@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Martin Stamenov — AI Engineer</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='none' stroke='%233FD8FF' stroke-width='4' stroke-dasharray='30 12'/%3E%3Ccircle cx='32' cy='32' r='8' fill='%233FD8FF'/%3E%3C/svg%3E">
+<meta property="og:title" content="Martin Stamenov — AI Engineer">
+<meta property="og:description" content="LLM agents, RAG pipelines, MLOps and network automation — in production. Portfolio, projects and research.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#020810">
+<meta name="description" content="Martin Stamenov — AI engineer in Skopje. LLM agents, RAG pipelines, MLOps and network automation, in production.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#020810;
+  --glass:rgba(13,32,48,.35);
+  --cyan:#3FD8FF;
+  --cyan-dim:#1A5E77;
+  --cyan-ghost:rgba(63,216,255,.12);
+  --amber:#FFB25E;
+  --amber-dim:#8A5A2A;
+  --ink:#D9EEF7;
+  --mist:#7FA3B5;
+  --maxw:1140px;
+  --mono:'Share Tech Mono',monospace;
+  --disp:'Chakra Petch',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--void);
+  color:var(--ink);
+  font-family:var(--disp);
+  font-size:16px;line-height:1.65;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;
+}
+::selection{background:var(--cyan);color:#02141C}
+a{color:inherit}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+a:focus-visible,button:focus-visible{outline:1.5px solid var(--amber);outline-offset:3px}
+
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(1000px 700px at 50% -10%, rgba(63,216,255,.09), transparent 60%),
+    radial-gradient(800px 600px at 100% 100%, rgba(63,216,255,.05), transparent 55%);
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:40;pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(63,216,255,.025) 0 1px,transparent 1px 3px);
+  mix-blend-mode:screen;
+}
+main,nav,header{position:relative;z-index:1}
+
+.mono{font-family:var(--mono)}
+.glow{text-shadow:0 0 14px rgba(63,216,255,.55),0 0 40px rgba(63,216,255,.25)}
+.readout{font-family:var(--mono);font-size:12.5px;color:var(--cyan);letter-spacing:.04em}
+.readout .dim{color:var(--cyan-dim)}
+.readout .a{color:var(--amber)}
+
+/* ---------- nav ---------- */
+nav{
+  position:fixed;inset:0 0 auto 0;z-index:50;
+  background:rgba(2,8,16,.7);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(63,216,255,.18);
+}
+.nav-in{max-width:var(--maxw);margin:0 auto;padding:13px 24px;display:flex;align-items:center;gap:26px}
+.mark{display:flex;align-items:center;gap:11px;text-decoration:none}
+.mark-core{
+  width:15px;height:15px;border-radius:50%;
+  background:radial-gradient(circle,#CFF3FF 0%,var(--cyan) 45%,transparent 75%);
+  box-shadow:0 0 12px var(--cyan),0 0 26px rgba(63,216,255,.5);
+  animation:corepulse 3s ease-in-out infinite;
+}
+@keyframes corepulse{0%,100%{box-shadow:0 0 10px var(--cyan),0 0 22px rgba(63,216,255,.45)}50%{box-shadow:0 0 16px var(--cyan),0 0 38px rgba(63,216,255,.7)}}
+.mark span{font-family:var(--mono);font-size:14px;color:var(--cyan);letter-spacing:.22em}
+.stream{
+  width:min(320px,60vw);height:2px;margin:0 auto 30px;
+  background:repeating-linear-gradient(90deg,var(--cyan) 0 10px,transparent 10px 26px);
+  opacity:.55;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 20%,#000 80%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 20%,#000 80%,transparent);
+  animation:flow 1.2s linear infinite;
+}
+@keyframes flow{to{background-position:26px 0}}
+.nav-links{margin-left:auto;display:flex;gap:22px}
+.nav-links a{
+  font-family:var(--mono);font-size:13px;color:var(--mist);
+  text-decoration:none;transition:color .15s,text-shadow .15s;
+}
+.nav-links a:hover,.nav-links a:focus-visible{color:var(--cyan);text-shadow:0 0 10px rgba(63,216,255,.6)}
+.nav-toggle{display:none;margin-left:auto;background:none;border:1px solid var(--cyan-dim);padding:9px;cursor:pointer;flex-direction:column;gap:4px}
+.nav-toggle span{display:block;width:18px;height:2px;background:var(--cyan);box-shadow:0 0 6px rgba(63,216,255,.5)}
+.nav-status{font-family:var(--mono);font-size:12px;color:var(--amber);display:flex;align-items:center;gap:8px}
+.nav-status::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 8px var(--amber);animation:blink 2.4s steps(1) infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* ---------- hero ---------- */
+header{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:120px 0 80px;position:relative;text-align:center;
+}
+.holo-rings{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:min(92vw,880px);aspect-ratio:1;pointer-events:none;
+}
+.holo-rings svg{width:100%;height:100%;filter:drop-shadow(0 0 4px rgba(63,216,255,.4)) drop-shadow(0 0 16px rgba(63,216,255,.18))}
+.r-slow{transform-origin:50% 50%;animation:spin 90s linear infinite}
+.r-med{transform-origin:50% 50%;animation:spinr 55s linear infinite}
+.r-fast{transform-origin:50% 50%;animation:spin 18s linear infinite}
+.r-burst{transform-origin:50% 50%;animation:spinr 140s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes spinr{to{transform:rotate(-360deg)}}
+.n-pulse{animation:npulse 2.6s ease-in-out infinite}
+@keyframes npulse{0%,100%{opacity:.35}50%{opacity:1}}
+.e-flow{stroke-dasharray:5 9;animation:eflow 1.5s linear infinite}
+@keyframes eflow{to{stroke-dashoffset:-14}}
+.blueprint{
+  position:absolute;inset:0;pointer-events:none;opacity:.6;
+  background-image:
+    linear-gradient(rgba(63,216,255,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(63,216,255,.05) 1px,transparent 1px),
+    linear-gradient(rgba(63,216,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(63,216,255,.025) 1px,transparent 1px);
+  background-size:110px 110px,110px 110px,22px 22px,22px 22px;
+  -webkit-mask-image:radial-gradient(75% 75% at 50% 50%,#000 25%,transparent 95%);
+  mask-image:radial-gradient(75% 75% at 50% 50%,#000 25%,transparent 95%);
+}
+.core-canvas{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  z-index:1;pointer-events:none;opacity:1;
+}
+.hero-copy{position:relative;z-index:2;max-width:840px;padding:0 24px}
+.hero-copy::before{
+  content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:135%;height:125%;z-index:-1;
+  background:radial-gradient(50% 50% at 50% 50%,rgba(2,8,16,.8) 0%,rgba(2,8,16,.48) 52%,transparent 100%);
+}
+.term{
+  font-family:var(--mono);font-size:13.5px;color:var(--cyan);
+  min-height:1.7em;margin-bottom:24px;
+}
+.term .prompt{color:var(--amber)}
+.term .cursor{display:inline-block;width:8px;height:14px;background:var(--cyan);vertical-align:-2px;animation:blink 1s steps(1) infinite;box-shadow:0 0 8px var(--cyan)}
+h1{
+  font-size:clamp(46px,8.5vw,104px);font-weight:600;line-height:1.02;
+  letter-spacing:.045em;text-transform:uppercase;color:#EAF9FF;
+  text-shadow:0 0 18px rgba(63,216,255,.5),0 0 60px rgba(63,216,255,.28);
+}
+h1 .thin{font-weight:400;color:var(--cyan)}
+.hero-role{
+  margin-top:18px;font-family:var(--mono);font-size:clamp(13px,1.7vw,15.5px);
+  color:var(--amber);letter-spacing:.22em;text-shadow:0 0 12px rgba(255,178,94,.4);
+}
+.hero-sub{margin:28px auto 0;max-width:620px;color:#A9C6D8;font-size:16.5px;font-weight:400}
+.hero-sub strong{color:var(--ink);font-weight:500}
+.hero-cta{margin-top:38px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{
+  position:relative;font-family:var(--mono);font-size:13.5px;letter-spacing:.03em;
+  text-decoration:none;padding:13px 26px;color:var(--cyan);
+  border:1px solid var(--cyan-dim);background:var(--cyan-ghost);
+  transition:all .18s ease;
+}
+.btn::before,.btn::after{content:"";position:absolute;width:8px;height:8px;border-color:var(--cyan);border-style:solid;transition:all .18s}
+.btn::before{top:-1px;left:-1px;border-width:1.5px 0 0 1.5px}
+.btn::after{bottom:-1px;right:-1px;border-width:0 1.5px 1.5px 0}
+.btn:hover{background:rgba(63,216,255,.2);box-shadow:0 0 22px rgba(63,216,255,.35),inset 0 0 18px rgba(63,216,255,.12);text-shadow:0 0 8px rgba(63,216,255,.8)}
+.btn:hover::before,.btn:hover::after{width:100%;height:100%}
+.btn-a{color:var(--amber);border-color:var(--amber-dim);background:rgba(255,178,94,.08)}
+.btn-a::before,.btn-a::after{border-color:var(--amber)}
+.btn-a:hover{background:rgba(255,178,94,.16);box-shadow:0 0 22px rgba(255,178,94,.3),inset 0 0 18px rgba(255,178,94,.1);text-shadow:0 0 8px rgba(255,178,94,.8)}
+.hero-readouts{margin-top:54px;display:flex;gap:34px;justify-content:center;flex-wrap:wrap}
+.hero-readouts .readout{border-left:1px solid var(--cyan-dim);padding-left:12px;text-align:left;line-height:1.75}
+
+.field{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.8}
+/* viewport HUD ticks */
+.corner{position:fixed;width:26px;height:26px;z-index:45;pointer-events:none;border-color:rgba(63,216,255,.5);border-style:solid}
+.c-tl{top:12px;left:12px;border-width:1.5px 0 0 1.5px}
+.c-tr{top:12px;right:12px;border-width:1.5px 1.5px 0 0}
+.c-bl{bottom:12px;left:12px;border-width:0 0 1.5px 1.5px}
+.c-br{bottom:12px;right:12px;border-width:0 1.5px 1.5px 0}
+
+/* ---------- sections ---------- */
+section{padding:100px 0}
+.sec-head{margin-bottom:50px}
+.sec-tag{font-family:var(--mono);font-size:13px;color:var(--amber);display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.sec-tag::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);animation:npulse 3.2s ease-in-out infinite}
+.sec-tag::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--amber-dim),transparent)}
+h2{
+  font-size:clamp(28px,4vw,40px);font-weight:600;letter-spacing:.01em;
+  color:#EAF9FF;text-shadow:0 0 16px rgba(63,216,255,.35);
+}
+
+.panel{
+  position:relative;border:1px solid rgba(63,216,255,.22);
+  background:radial-gradient(200px 130px at 0% 0%,rgba(63,216,255,.08),transparent 70%),var(--glass);
+  backdrop-filter:blur(4px);padding:28px 30px;
+  box-shadow:inset 0 0 30px rgba(63,216,255,.04);
+}
+.panel::before,.panel::after{content:"";position:absolute;width:14px;height:14px;border-color:var(--cyan);border-style:solid;opacity:.8}
+.panel::before{top:-1px;left:-1px;border-width:1.5px 0 0 1.5px}
+.panel::after{bottom:-1px;right:-1px;border-width:0 1.5px 1.5px 0}
+.panel-head{font-family:var(--mono);font-size:12px;color:var(--cyan-dim);margin-bottom:14px;display:flex;justify-content:space-between;gap:10px}
+.panel-head .hl{color:var(--amber)}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:-30px}
+.stat{text-align:center;padding:26px 16px}
+.stat .n{font-family:var(--mono);font-size:clamp(28px,3.6vw,42px);color:var(--cyan);text-shadow:0 0 18px rgba(63,216,255,.6);line-height:1}
+.stat .l{margin-top:10px;font-size:12.5px;color:var(--mist);font-family:var(--mono)}
+
+/* about */
+.about-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:40px;align-items:start}
+.about-grid .lead p{color:var(--mist);margin-bottom:18px;font-size:16.5px;font-weight:400}
+.about-grid .lead strong{color:var(--ink);font-weight:500}
+.id-row{display:grid;grid-template-columns:100px 1fr;gap:14px;padding:11px 0;border-bottom:1px dashed rgba(63,216,255,.15);font-size:14.5px}
+.id-row:last-child{border-bottom:none}
+.id-row .k{font-family:var(--mono);font-size:12px;color:var(--amber);padding-top:2px}
+.id-row .v{color:var(--ink);font-weight:400}
+
+/* experience */
+.xp-list{display:flex;flex-direction:column;gap:26px}
+.xp h3{font-size:21px;font-weight:600;letter-spacing:.02em;margin-bottom:2px;color:#EAF9FF}
+.xp .org{font-family:var(--mono);font-size:13px;color:var(--cyan);margin-bottom:16px}
+.xp ul{list-style:none}
+.xp li{color:var(--mist);font-size:15px;font-weight:400;padding-left:22px;position:relative;margin-bottom:9px}
+.xp li::before{content:"▸";position:absolute;left:0;color:var(--cyan);text-shadow:0 0 8px rgba(63,216,255,.6)}
+.xp li b{color:var(--ink);font-weight:500}
+
+/* projects */
+.proj-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.proj{display:flex;flex-direction:column;gap:13px;transition:box-shadow .2s,border-color .2s}
+.proj:hover{border-color:rgba(63,216,255,.55);box-shadow:0 0 30px rgba(63,216,255,.14),inset 0 0 30px rgba(63,216,255,.06)}
+.proj h3{font-size:19px;font-weight:600;color:#EAF9FF;line-height:1.3}
+.proj .desc{color:var(--mist);font-size:14.5px;font-weight:400;flex:1}
+.proj .desc b{color:var(--ink);font-weight:500}
+.stack{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-family:var(--mono);font-size:11.5px;color:var(--cyan);background:rgba(63,216,255,.07);border:1px solid rgba(63,216,255,.25);padding:3px 9px}
+.proj-link{
+  font-family:var(--mono);font-size:12.5px;color:var(--amber);
+  text-decoration:none;display:inline-flex;gap:8px;align-items:center;margin-top:2px;
+}
+.proj-link:hover{text-shadow:0 0 10px rgba(255,178,94,.7)}
+.proj-link svg{width:13px;height:13px}
+
+/* research */
+.pubs{display:flex;flex-direction:column;gap:16px}
+.pub{display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:start}
+.pub .role{font-family:var(--mono);font-size:11.5px;color:var(--amber);border:1px solid var(--amber-dim);padding:5px 10px;text-align:center;background:rgba(255,178,94,.05)}
+.pub .role.co{color:var(--cyan);border-color:var(--cyan-dim);background:rgba(63,216,255,.05)}
+.pub h3{font-size:17px;font-weight:600;color:#EAF9FF;margin-bottom:4px;line-height:1.45}
+.pub p{color:var(--mist);font-size:14px;font-weight:400}
+.pub .venue{color:var(--ink);font-weight:500}
+
+/* toolbox */
+.skill-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.skill-col h3{font-size:16.5px;font-weight:600;color:#EAF9FF;margin-bottom:6px}
+.skill-col .ctx{font-family:var(--mono);font-size:12.5px;color:var(--amber);margin-bottom:16px;display:block}
+.skill-col .stack{gap:8px}
+.skill-col .chip{font-size:12px;padding:4px 10px}
+
+/* contact */
+.contact{padding:110px 0 70px;text-align:center;position:relative}
+.contact h2{margin-bottom:14px}
+.contact .lead{color:var(--mist);max-width:520px;margin:0 auto 38px;font-weight:400;font-size:16.5px}
+.contact-links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:80px}
+.footer{
+  border-top:1px solid rgba(63,216,255,.15);padding-top:26px;
+  display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:12px;color:var(--cyan-dim);
+}
+
+@media (prefers-reduced-motion:reduce){
+  .r-slow,.r-med,.r-fast,.r-burst,.mark-core,.nav-status::before,.term .cursor,.stream,.n-pulse,.e-flow,.sec-tag::before{animation:none}
+  html{scroll-behavior:auto}
+}
+@media(max-width:960px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .about-grid{grid-template-columns:1fr}
+  .proj-grid{grid-template-columns:1fr}
+  .skill-cols{grid-template-columns:1fr}
+  .pub{grid-template-columns:1fr;gap:8px}
+  .pub .role{justify-self:start}
+  .nav-links{display:none}
+  .nav-toggle{display:flex}
+  .nav-links.open{display:flex;position:absolute;top:100%;left:0;right:0;flex-direction:column;gap:0;background:rgba(2,8,16,.96);backdrop-filter:blur(10px);border-bottom:1px solid rgba(63,216,255,.2);padding:8px 24px 14px}
+  .nav-links.open a{padding:11px 0;font-size:14px}
+  .corner{display:none}
+}
+</style>
+</head>
+<body>
+
+<canvas class="field" id="field" aria-hidden="true"></canvas>
+
+<div class="corner c-tl" aria-hidden="true"></div>
+<div class="corner c-tr" aria-hidden="true"></div>
+<div class="corner c-bl" aria-hidden="true"></div>
+<div class="corner c-br" aria-hidden="true"></div>
+
+<nav>
+  <div class="nav-in">
+    <a class="mark" href="#top" aria-label="Home"><span class="mark-core"></span><span>STAMENOV</span></a>
+    <div class="nav-links">
+      <a href="#about">about</a>
+      <a href="#experience">work</a>
+      <a href="#projects">projects</a>
+      <a href="#research">research</a>
+      <a href="#toolbox">toolbox</a>
+      <a href="#contact">contact</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <span class="nav-status">signal live</span>
+  </div>
+</nav>
+
+<header id="top">
+  <div class="blueprint" aria-hidden="true"></div>
+  <div class="holo-rings" aria-hidden="true">
+    <svg viewBox="0 0 800 800" fill="none">
+      <circle cx="400" cy="400" r="392" stroke="#1A5E77" stroke-opacity=".35" stroke-width="1"/>
+      <circle cx="400" cy="400" r="376" stroke="#1A5E77" stroke-opacity=".3" stroke-width="6" stroke-dasharray="1.5 14"/>
+      <g class="r-slow">
+        <circle cx="400" cy="400" r="352" stroke="#3FD8FF" stroke-opacity=".3" stroke-width="1" stroke-dasharray="2 10 140 10"/>
+        <circle cx="400" cy="400" r="338" stroke="#3FD8FF" stroke-opacity=".18" stroke-width="4" stroke-dasharray="1 44"/>
+        <g stroke="#3FD8FF" stroke-opacity=".5" stroke-width="1.5">
+          <line x1="400" y1="34" x2="400" y2="56"/><line x1="400" y1="744" x2="400" y2="766"/>
+          <line x1="34" y1="400" x2="56" y2="400"/><line x1="744" y1="400" x2="766" y2="400"/>
+        </g>
+      </g>
+      <g class="r-med">
+        <circle cx="400" cy="400" r="308" stroke="#3FD8FF" stroke-opacity=".22" stroke-width="5" stroke-dasharray="1 26"/>
+        <circle cx="400" cy="400" r="290" stroke="#3FD8FF" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="80 30 6 30"/>
+        <circle cx="400" cy="400" r="272" stroke="#FFB25E" stroke-opacity=".35" stroke-width="1" stroke-dasharray="3 40"/>
+      </g>
+      <g class="r-fast">
+        <path d="M 400 178 A 222 222 0 0 1 622 400" stroke="#3FD8FF" stroke-opacity=".6" stroke-width="2"/>
+        <path d="M 400 622 A 222 222 0 0 1 178 400" stroke="#FFB25E" stroke-opacity=".45" stroke-width="1.5"/>
+        <circle cx="400" cy="178" r="3.5" fill="#3FD8FF" fill-opacity=".9"/>
+      </g>
+      <circle cx="400" cy="400" r="196" stroke="#3FD8FF" stroke-opacity=".1" stroke-width="18"/>
+      <circle cx="400" cy="400" r="196" stroke="#3FD8FF" stroke-opacity=".35" stroke-width="1"/>
+      <circle cx="400" cy="400" r="152" stroke="#3FD8FF" stroke-opacity=".2" stroke-width="1" stroke-dasharray="6 12"/>
+      <!-- chaotic AI-core burst -->
+      <g class="r-burst" opacity=".7">
+        <line x1="370.2" y1="340.4" x2="286.5" y2="173.1" stroke="#FFC44D" stroke-opacity="0.3" stroke-width="0.7" stroke-dasharray="3 7"/>
+        <line x1="345.9" y1="402.5" x2="198.0" y2="409.4" stroke="#FFC44D" stroke-opacity="0.15" stroke-width="1.3" stroke-dasharray="3 7"/>
+        <line x1="453.1" y1="347.7" x2="583.4" y2="219.3" stroke="#3FD8FF" stroke-opacity="0.31" stroke-width="1.5" stroke-dasharray="3 7"/>
+        <line x1="538.3" y1="358.3" x2="655.2" y2="323.1" stroke="#FFC44D" stroke-opacity="0.16" stroke-width="1.3" stroke-dasharray="3 7"/>
+        <line x1="448.1" y1="296.7" x2="526.1" y2="128.9" stroke="#FFC44D" stroke-opacity="0.3" stroke-width="0.7" stroke-dasharray="3 7"/>
+        <line x1="434.1" y1="279.9" x2="474.3" y2="138.5" stroke="#FFC44D" stroke-opacity="0.31" stroke-width="0.9"/>
+        <line x1="434.9" y1="522.0" x2="466.3" y2="631.5" stroke="#3FD8FF" stroke-opacity="0.29" stroke-width="1.3"/>
+        <line x1="362.7" y1="246.6" x2="341.2" y2="158.0" stroke="#FFC44D" stroke-opacity="0.37" stroke-width="1.0" stroke-dasharray="3 7"/>
+        <line x1="519.8" y1="369.9" x2="721.1" y2="319.3" stroke="#3FD8FF" stroke-opacity="0.41" stroke-width="1.2" stroke-dasharray="3 7"/>
+        <line x1="305.6" y1="463.6" x2="179.5" y2="548.6" stroke="#3FD8FF" stroke-opacity="0.43" stroke-width="1.2"/>
+        <line x1="518.0" y1="352.7" x2="691.1" y2="283.3" stroke="#3FD8FF" stroke-opacity="0.39" stroke-width="0.9" stroke-dasharray="3 7"/>
+        <line x1="374.3" y1="445.8" x2="299.4" y2="579.3" stroke="#FFC44D" stroke-opacity="0.16" stroke-width="1.3" stroke-dasharray="3 7"/>
+        <line x1="453.1" y1="343.9" x2="549.6" y2="242.0" stroke="#3FD8FF" stroke-opacity="0.15" stroke-width="1.1" stroke-dasharray="3 7"/>
+        <line x1="504.2" y1="493.7" x2="671.8" y2="644.6" stroke="#FFC44D" stroke-opacity="0.26" stroke-width="1.4" stroke-dasharray="3 7"/>
+        <line x1="464.3" y1="417.5" x2="562.4" y2="444.2" stroke="#FFC44D" stroke-opacity="0.2" stroke-width="1.1"/>
+        <line x1="396.0" y1="349.7" x2="384.3" y2="204.8" stroke="#FFC44D" stroke-opacity="0.31" stroke-width="1.2"/>
+        <line x1="282.6" y1="411.5" x2="91.8" y2="430.1" stroke="#FFC44D" stroke-opacity="0.42" stroke-width="1.4"/>
+        <line x1="427.6" y1="489.0" x2="469.6" y2="624.4" stroke="#FFC44D" stroke-opacity="0.33" stroke-width="0.7" stroke-dasharray="3 7"/>
+        <line x1="417.4" y1="334.4" x2="451.0" y2="207.6" stroke="#FFC44D" stroke-opacity="0.12" stroke-width="0.7" stroke-dasharray="3 7"/>
+        <line x1="365.4" y1="360.1" x2="216.6" y2="188.2" stroke="#3FD8FF" stroke-opacity="0.17" stroke-width="0.9" stroke-dasharray="3 7"/>
+        <line x1="358.2" y1="352.1" x2="211.8" y2="184.2" stroke="#3FD8FF" stroke-opacity="0.27" stroke-width="0.7"/>
+        <line x1="470.2" y1="347.5" x2="564.5" y2="277.0" stroke="#3FD8FF" stroke-opacity="0.17" stroke-width="1.5" stroke-dasharray="3 7"/>
+        <line x1="334.9" y1="411.7" x2="169.8" y2="441.3" stroke="#FFC44D" stroke-opacity="0.29" stroke-width="1.4"/>
+        <line x1="373.9" y1="474.3" x2="328.8" y2="602.6" stroke="#FFC44D" stroke-opacity="0.37" stroke-width="1.3"/>
+        <line x1="364.2" y1="334.6" x2="260.5" y2="145.0" stroke="#3FD8FF" stroke-opacity="0.4" stroke-width="1.3"/>
+        <line x1="395.2" y1="474.8" x2="384.9" y2="637.6" stroke="#FFC44D" stroke-opacity="0.13" stroke-width="0.9" stroke-dasharray="3 7"/>
+        <line x1="392.7" y1="274.0" x2="378.8" y2="32.3" stroke="#FFC44D" stroke-opacity="0.43" stroke-width="1.5"/>
+        <line x1="351.0" y1="344.2" x2="277.9" y2="260.9" stroke="#FFC44D" stroke-opacity="0.19" stroke-width="1.4"/>
+        <line x1="455.3" y1="486.6" x2="556.2" y2="644.7" stroke="#3FD8FF" stroke-opacity="0.15" stroke-width="1.4"/>
+        <line x1="426.7" y1="529.8" x2="458.2" y2="682.6" stroke="#FFC44D" stroke-opacity="0.38" stroke-width="1.3" stroke-dasharray="3 7"/>
+        <line x1="492.1" y1="416.6" x2="632.1" y2="441.8" stroke="#3FD8FF" stroke-opacity="0.36" stroke-width="0.7" stroke-dasharray="3 7"/>
+        <line x1="487.0" y1="278.4" x2="612.2" y2="103.4" stroke="#FFC44D" stroke-opacity="0.39" stroke-width="1.2"/>
+        <line x1="334.9" y1="310.9" x2="279.7" y2="235.3" stroke="#FFC44D" stroke-opacity="0.44" stroke-width="1.1"/>
+        <line x1="489.3" y1="439.6" x2="696.8" y2="531.5" stroke="#3FD8FF" stroke-opacity="0.19" stroke-width="0.9" stroke-dasharray="3 7"/>
+        <line x1="406.8" y1="285.7" x2="413.7" y2="169.2" stroke="#FFC44D" stroke-opacity="0.16" stroke-width="0.9"/>
+        <line x1="289.8" y1="370.3" x2="65.0" y2="309.8" stroke="#FFC44D" stroke-opacity="0.42" stroke-width="1.1"/>
+        <line x1="348.5" y1="407.7" x2="200.9" y2="429.6" stroke="#FFC44D" stroke-opacity="0.12" stroke-width="0.8"/>
+        <line x1="272.0" y1="378.5" x2="104.2" y2="350.3" stroke="#FFC44D" stroke-opacity="0.29" stroke-width="1.3"/>
+        <line x1="487.7" y1="331.0" x2="577.9" y2="260.0" stroke="#FFC44D" stroke-opacity="0.37" stroke-width="1.1"/>
+        <line x1="409.4" y1="550.1" x2="418.8" y2="699.6" stroke="#3FD8FF" stroke-opacity="0.29" stroke-width="1.2"/>
+        <line x1="296.2" y1="367.9" x2="147.1" y2="321.9" stroke="#3FD8FF" stroke-opacity="0.35" stroke-width="1.4"/>
+        <line x1="393.3" y1="288.7" x2="378.8" y2="49.3" stroke="#3FD8FF" stroke-opacity="0.17" stroke-width="1.0" stroke-dasharray="3 7"/>
+        <line x1="468.7" y1="366.3" x2="543.3" y2="329.7" stroke="#3FD8FF" stroke-opacity="0.38" stroke-width="0.7"/>
+        <line x1="374.1" y1="519.9" x2="353.9" y2="613.4" stroke="#3FD8FF" stroke-opacity="0.44" stroke-width="1.5" stroke-dasharray="3 7"/>
+        <line x1="164.8" y1="225.1" x2="128.2" y2="197.9" stroke="#7FE4FF" stroke-opacity="0.26" stroke-width="1.3"/>
+        <line x1="129.8" y1="276.0" x2="110.8" y2="267.3" stroke="#FFC44D" stroke-opacity="0.31" stroke-width="1.3"/>
+        <line x1="361.2" y1="619.5" x2="356.1" y2="648.1" stroke="#FFC44D" stroke-opacity="0.21" stroke-width="1.3"/>
+        <line x1="246.3" y1="126.6" x2="232.9" y2="102.7" stroke="#FFC44D" stroke-opacity="0.54" stroke-width="1.3"/>
+        <line x1="487.3" y1="755.2" x2="490.2" y2="766.8" stroke="#FFC44D" stroke-opacity="0.21" stroke-width="1.3"/>
+        <line x1="447.2" y1="656.3" x2="449.6" y2="669.0" stroke="#FFC44D" stroke-opacity="0.52" stroke-width="1.3"/>
+        <line x1="508.7" y1="634.9" x2="514.4" y2="647.3" stroke="#7FE4FF" stroke-opacity="0.4" stroke-width="1.3"/>
+        <line x1="328.5" y1="622.2" x2="325.3" y2="631.9" stroke="#7FE4FF" stroke-opacity="0.35" stroke-width="1.3"/>
+        <line x1="724.1" y1="241.5" x2="752.9" y2="227.4" stroke="#7FE4FF" stroke-opacity="0.23" stroke-width="1.3"/>
+        <line x1="542.4" y1="580.6" x2="567.6" y2="612.7" stroke="#FFC44D" stroke-opacity="0.32" stroke-width="1.3"/>
+        <line x1="60.8" y1="517.5" x2="43.6" y2="523.4" stroke="#FFC44D" stroke-opacity="0.38" stroke-width="1.3"/>
+        <line x1="417.2" y1="164.2" x2="418.2" y2="150.1" stroke="#FFC44D" stroke-opacity="0.27" stroke-width="1.3"/>
+        <line x1="299.1" y1="154.2" x2="285.1" y2="120.1" stroke="#FFC44D" stroke-opacity="0.38" stroke-width="1.3"/>
+        <line x1="519.1" y1="155.4" x2="522.9" y2="147.6" stroke="#FFC44D" stroke-opacity="0.21" stroke-width="1.3"/>
+        <line x1="367.9" y1="700.9" x2="366.3" y2="716.1" stroke="#FFC44D" stroke-opacity="0.53" stroke-width="1.3"/>
+        <line x1="669.2" y1="187.7" x2="688.4" y2="172.6" stroke="#FFC44D" stroke-opacity="0.49" stroke-width="1.3"/>
+        <line x1="168.3" y1="215.8" x2="141.6" y2="194.5" stroke="#7FE4FF" stroke-opacity="0.32" stroke-width="1.3"/>
+        <line x1="561.1" y1="683.4" x2="577.0" y2="711.4" stroke="#FFC44D" stroke-opacity="0.32" stroke-width="1.3"/>
+        <line x1="625.6" y1="319.7" x2="635.7" y2="316.2" stroke="#7FE4FF" stroke-opacity="0.29" stroke-width="1.3"/>
+        <line x1="520.6" y1="201.0" x2="541.4" y2="166.9" stroke="#7FE4FF" stroke-opacity="0.43" stroke-width="1.3"/>
+        <line x1="348.9" y1="148.8" x2="345.1" y2="130.1" stroke="#FFC44D" stroke-opacity="0.26" stroke-width="1.3"/>
+        <line x1="155.4" y1="313.4" x2="113.4" y2="298.5" stroke="#7FE4FF" stroke-opacity="0.39" stroke-width="1.3"/>
+        <line x1="412.7" y1="35.4" x2="413.4" y2="15.6" stroke="#FFC44D" stroke-opacity="0.2" stroke-width="1.3"/>
+        <line x1="185.7" y1="202.8" x2="165.8" y2="184.5" stroke="#FFC44D" stroke-opacity="0.38" stroke-width="1.3"/>
+        <line x1="659.5" y1="391.9" x2="670.9" y2="391.6" stroke="#FFC44D" stroke-opacity="0.21" stroke-width="1.3"/>
+        <line x1="663.0" y1="362.6" x2="679.7" y2="360.2" stroke="#7FE4FF" stroke-opacity="0.39" stroke-width="1.3"/>
+        <line x1="401.1" y1="718.6" x2="401.2" y2="753.8" stroke="#7FE4FF" stroke-opacity="0.34" stroke-width="1.3"/>
+        <line x1="230.7" y1="73.6" x2="224.4" y2="61.4" stroke="#7FE4FF" stroke-opacity="0.43" stroke-width="1.3"/>
+        <line x1="732.3" y1="306.2" x2="772.6" y2="294.8" stroke="#7FE4FF" stroke-opacity="0.46" stroke-width="1.3"/>
+        <line x1="491.8" y1="622.7" x2="502.4" y2="648.5" stroke="#7FE4FF" stroke-opacity="0.49" stroke-width="1.3"/>
+        <line x1="515.9" y1="723.9" x2="526.0" y2="752.3" stroke="#7FE4FF" stroke-opacity="0.44" stroke-width="1.3"/>
+        <line x1="311.3" y1="638.5" x2="308.1" y2="647.1" stroke="#FFC44D" stroke-opacity="0.33" stroke-width="1.3"/>
+        <line x1="673.0" y1="188.5" x2="696.1" y2="170.6" stroke="#7FE4FF" stroke-opacity="0.42" stroke-width="1.3"/>
+        <line x1="276.2" y1="666.0" x2="272.8" y2="673.4" stroke="#7FE4FF" stroke-opacity="0.46" stroke-width="1.3"/>
+        <line x1="99.8" y1="405.6" x2="66.7" y2="406.2" stroke="#FFC44D" stroke-opacity="0.46" stroke-width="1.3"/>
+        <line x1="396.8" y1="168.9" x2="396.6" y2="150.8" stroke="#7FE4FF" stroke-opacity="0.27" stroke-width="1.3"/>
+        <path d="M 694.1 445.2 A 298 298 0 0 0 670.8 276.6" stroke="#FFC44D" stroke-opacity="0.27" stroke-width="1.8"/>
+        <path d="M 174.4 603.9 A 304 304 0 0 0 356.4 700.9" stroke="#FFC44D" stroke-opacity="0.19" stroke-width="1.2"/>
+        <path d="M 300.0 118.9 A 298 298 0 0 0 152.6 233.2" stroke="#FFC44D" stroke-opacity="0.17" stroke-width="1.2"/>
+        <path d="M 300.1 662.9 A 281 281 0 0 0 497.3 663.9" stroke="#FFC44D" stroke-opacity="0.28" stroke-width="1.5"/>
+        <path d="M 570.5 242.8 A 232 232 0 0 0 387.5 168.4" stroke="#FFC44D" stroke-opacity="0.39" stroke-width="2.1"/>
+        <path d="M 279.9 368.3 A 124 124 0 0 0 295.2 466.7" stroke="#3FD8FF" stroke-opacity="0.26" stroke-width="1.2"/>
+        <path d="M 560.5 457.1 A 170 170 0 0 0 570.3 395.6" stroke="#3FD8FF" stroke-opacity="0.19" stroke-width="1.5"/>
+        <path d="M 634.5 142.0 A 349 349 0 0 0 369.6 52.7" stroke="#3FD8FF" stroke-opacity="0.37" stroke-width="1.8"/>
+        <path d="M 540.5 505.2 A 176 176 0 0 0 575.1 412.0" stroke="#FFC44D" stroke-opacity="0.15" stroke-width="1.5"/>
+        <path d="M 326.8 183.9 A 228 228 0 0 0 263.5 217.2" stroke="#FFC44D" stroke-opacity="0.23" stroke-width="2.0"/>
+        <path d="M 400.6 520.4 A 120 120 0 0 0 490.0 480.0" stroke="#FFC44D" stroke-opacity="0.38" stroke-width="1.8"/>
+        <path d="M 316.7 74.1 A 336 336 0 0 0 173.4 151.4" stroke="#FFC44D" stroke-opacity="0.4" stroke-width="1.6"/>
+        <path d="M 214.2 309.8 A 207 207 0 0 0 193.6 392.5" stroke="#FFC44D" stroke-opacity="0.18" stroke-width="2.0"/>
+        <path d="M 573.3 474.2 A 189 189 0 0 0 588.5 401.5" stroke="#FFC44D" stroke-opacity="0.28" stroke-width="1.1"/>
+        <circle class="n-pulse" cx="143.0" cy="137.6" r="2.5" fill="#3FD8FF" style="animation-delay:1.6s"/>
+        <circle class="n-pulse" cx="710.4" cy="587.8" r="2.3" fill="#FFC44D" style="animation-delay:0.1s"/>
+        <circle class="n-pulse" cx="375.6" cy="619.4" r="2.2" fill="#3FD8FF" style="animation-delay:0.7s"/>
+        <circle class="n-pulse" cx="741.9" cy="291.3" r="1.8" fill="#FFC44D" style="animation-delay:0.9s"/>
+        <circle class="n-pulse" cx="310.0" cy="109.3" r="1.5" fill="#3FD8FF" style="animation-delay:1.7s"/>
+        <circle class="n-pulse" cx="321.0" cy="161.1" r="1.3" fill="#FFC44D" style="animation-delay:0.4s"/>
+        <circle class="n-pulse" cx="492.3" cy="59.6" r="1.4" fill="#FFC44D" style="animation-delay:2.4s"/>
+        <circle class="n-pulse" cx="620.4" cy="404.9" r="1.3" fill="#FFC44D" style="animation-delay:0.2s"/>
+        <circle class="n-pulse" cx="336.4" cy="302.5" r="1.5" fill="#FFC44D" style="animation-delay:1.5s"/>
+        <circle class="n-pulse" cx="633.4" cy="600.0" r="1.7" fill="#FFC44D" style="animation-delay:1.4s"/>
+        <circle class="n-pulse" cx="265.5" cy="268.6" r="1.5" fill="#FFC44D" style="animation-delay:2.5s"/>
+        <circle class="n-pulse" cx="565.9" cy="232.2" r="2.6" fill="#3FD8FF" style="animation-delay:0.6s"/>
+        <circle class="n-pulse" cx="378.7" cy="239.4" r="1.8" fill="#FFC44D" style="animation-delay:2.5s"/>
+        <circle class="n-pulse" cx="599.4" cy="679.3" r="1.1" fill="#FFC44D" style="animation-delay:1.8s"/>
+        <circle class="n-pulse" cx="580.2" cy="538.5" r="1.0" fill="#3FD8FF" style="animation-delay:1.0s"/>
+        <circle class="n-pulse" cx="695.2" cy="546.2" r="2.8" fill="#3FD8FF" style="animation-delay:0.6s"/>
+        <circle class="n-pulse" cx="504.4" cy="314.7" r="2.2" fill="#FFC44D" style="animation-delay:2.4s"/>
+        <circle class="n-pulse" cx="350.9" cy="673.4" r="1.8" fill="#3FD8FF" style="animation-delay:1.4s"/>
+        <circle class="n-pulse" cx="707.1" cy="322.1" r="2.7" fill="#FFC44D" style="animation-delay:1.7s"/>
+        <circle class="n-pulse" cx="357.9" cy="280.1" r="2.1" fill="#FFC44D" style="animation-delay:1.8s"/>
+        <circle class="n-pulse" cx="484.1" cy="328.5" r="2.0" fill="#FFC44D" style="animation-delay:1.0s"/>
+        <circle class="n-pulse" cx="443.7" cy="139.3" r="1.5" fill="#FFC44D" style="animation-delay:1.2s"/>
+        <circle class="n-pulse" cx="667.8" cy="470.7" r="1.9" fill="#3FD8FF" style="animation-delay:0.6s"/>
+        <circle class="n-pulse" cx="406.8" cy="31.5" r="1.6" fill="#3FD8FF" style="animation-delay:0.1s"/>
+        <circle class="n-pulse" cx="114.4" cy="397.0" r="1.5" fill="#FFC44D" style="animation-delay:1.7s"/>
+        <circle class="n-pulse" cx="538.9" cy="470.6" r="1.6" fill="#FFC44D" style="animation-delay:1.1s"/>
+        <circle class="n-pulse" cx="339.4" cy="534.4" r="2.3" fill="#3FD8FF" style="animation-delay:1.3s"/>
+        <circle class="n-pulse" cx="503.1" cy="43.3" r="2.5" fill="#FFC44D" style="animation-delay:0.6s"/>
+        <circle class="n-pulse" cx="455.4" cy="94.4" r="2.7" fill="#FFC44D" style="animation-delay:1.3s"/>
+        <circle class="n-pulse" cx="459.4" cy="257.1" r="2.2" fill="#FFC44D" style="animation-delay:2.5s"/>
+        <circle class="n-pulse" cx="523.7" cy="237.6" r="2.8" fill="#FFC44D" style="animation-delay:0.4s"/>
+        <circle class="n-pulse" cx="501.8" cy="365.6" r="2.6" fill="#FFC44D" style="animation-delay:2.3s"/>
+        <circle class="n-pulse" cx="358.9" cy="777.1" r="1.6" fill="#3FD8FF" style="animation-delay:0.5s"/>
+        <circle class="n-pulse" cx="681.9" cy="520.1" r="2.2" fill="#FFC44D" style="animation-delay:1.0s"/>
+        <circle class="n-pulse" cx="269.3" cy="267.4" r="1.0" fill="#FFC44D" style="animation-delay:0.7s"/>
+        <circle class="n-pulse" cx="181.5" cy="105.0" r="2.7" fill="#FFC44D" style="animation-delay:0.5s"/>
+        <circle class="n-pulse" cx="196.2" cy="142.7" r="1.8" fill="#3FD8FF" style="animation-delay:0.1s"/>
+        <circle class="n-pulse" cx="204.7" cy="367.1" r="1.3" fill="#3FD8FF" style="animation-delay:0.9s"/>
+        <circle class="n-pulse" cx="478.8" cy="459.6" r="2.5" fill="#FFC44D" style="animation-delay:2.0s"/>
+        <circle class="n-pulse" cx="496.9" cy="374.7" r="2.7" fill="#FFC44D" style="animation-delay:0.7s"/>
+        <circle class="n-pulse" cx="394.0" cy="750.5" r="1.5" fill="#FFC44D" style="animation-delay:2.5s"/>
+        <circle class="n-pulse" cx="276.8" cy="511.3" r="1.6" fill="#3FD8FF" style="animation-delay:0.7s"/>
+      </g>
+    </svg>
+  </div>
+  <canvas class="core-canvas" id="core" width="600" height="600" aria-hidden="true"></canvas>
+  <div class="hero-copy">
+    <p class="term" aria-live="polite"><span class="prompt">▸</span> <span id="term-text"></span><span class="cursor"></span></p>
+    <div class="stream" aria-hidden="true"></div>
+    <h1 class="glow">Martin<br><span class="thin">Stamenov</span></h1>
+    <p class="hero-role">AI ENGINEER</p>
+    <p class="hero-sub">I build ML systems that survive contact with production: <strong>LLM agents wired into real APIs</strong>, RAG pipelines, forecasting models running inside Airflow, and the monitoring that tells you when they break.</p>
+    <div class="hero-cta">
+      <a class="btn" href="#projects">see the work</a>
+      <a class="btn" href="https://github.com/stamenovmartin" target="_blank" rel="noopener">github</a>
+      <a class="btn btn-a" href="mailto:martin.stamenov03@gmail.com">email me</a>
+    </div>
+    <div class="hero-readouts">
+      <div class="readout"><span class="dim">loc</span><br>Skopje · 42.00°N 21.43°E</div>
+      <div class="readout"><span class="dim">day job</span><br>Makedonski Telekom · <span class="a">AI eng</span></div>
+      <div class="readout"><span class="dim">research</span><br>2 papers in the pipeline</div>
+      <div class="readout"><span class="dim">status</span><br><span class="a">open to hard problems</span></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<div class="wrap">
+  <div class="stats">
+    <div class="stat panel"><div class="n">530+</div><div class="l">API endpoints in one<br>provisioning platform</div></div>
+    <div class="stat panel"><div class="n">2,400</div><div class="l">controlled training runs<br>in one benchmark</div></div>
+    <div class="stat panel"><div class="n">0.94</div><div class="l">AUC, fraud model,<br>up from 0.85 baseline</div></div>
+    <div class="stat panel"><div class="n">146ms</div><div class="l">real-time scoring<br>latency, end to end</div></div>
+  </div>
+</div>
+
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="sec-tag">01</p>
+      <h2>The short version</h2>
+    </div>
+    <div class="about-grid">
+      <div class="lead">
+        <p>By day I automate a national telecom network at Makedonski Telekom — provisioning platforms on Kubernetes, forecasting models inside Airflow, and an <strong>LLM agent layer that does guided provisioning over 530+ real APIs</strong>. When an agent's tool call can reconfigure a router, you learn to take guardrails seriously.</p>
+        <p>Through August 2026 I was a research intern at the Macedonian Academy of Sciences and Arts, benchmarking GNNs against pretrained molecular models for drug discovery — work that became ADMET-Bench. Evenings and weekends go to side projects I run as real deployments: a marketing agent with a four-level LLM fallback chain, a fraud-scoring API with full monitoring.</p>
+        <p>The pattern across all of it: <strong>the model is the easy part</strong>. Data pipelines, evaluation, fallbacks and monitoring are what decide whether it works at 3 a.m. That's the part I'm good at.</p>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span>at a glance</span><span class="hl">2026</span></div>
+        <div class="id-row"><span class="k">now</span><span class="v">Junior Data &amp; AI Engineer, Makedonski Telekom AD</span></div>
+        <div class="id-row"><span class="k">2025–26</span><span class="v">ML Researcher (intern), Macedonian Academy of Sciences &amp; Arts</span></div>
+        <div class="id-row"><span class="k">degree</span><span class="v">B.Sc. Computer Science &amp; Engineering, FCSE Skopje — 2026</span></div>
+        <div class="id-row"><span class="k">focus</span><span class="v">LLM agents · RAG · MLOps · GNNs · network automation</span></div>
+        <div class="id-row"><span class="k">languages</span><span class="v">Macedonian (native), English (professional)</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="sec-tag">02</p>
+      <h2>Where I've worked</h2>
+    </div>
+    <div class="xp-list">
+
+      <div class="panel xp">
+        <div class="panel-head"><span>Sep 2025 — present</span><span class="hl">current role</span></div>
+        <h3>Junior Data &amp; AI Engineer</h3>
+        <p class="org">Makedonski Telekom AD · Skopje</p>
+        <ul>
+          <li>Building <b>NetFlow</b>, an in-house network provisioning platform — ~90 service modules, 530+ API endpoints on Kubernetes, with a workflow engine, scheduler, approval gates and automatic rollback for multi-vendor router changes. Now adding an <b>LLM agent layer</b> that does guided provisioning through tool calls over the platform's own APIs.</li>
+          <li>Added <b>ML traffic and capacity forecasting</b> to Zabbix monitoring — scikit-learn and statsmodels models running in scheduled Airflow pipelines.</li>
+          <li>Delivered an <b>AI assistant for the Ministry of Digitalization</b> over data.gov.mk — scoped, built and shipped to production; the full story is in the projects below.</li>
+        </ul>
+      </div>
+
+      <div class="panel xp">
+        <div class="panel-head"><span>Mar 2025 — Sep 2025</span><span class="hl">internship</span></div>
+        <h3>Data Engineer Intern</h3>
+        <p class="org">Makedonski Telekom AD · Skopje</p>
+        <ul>
+          <li>Fine-tuned <b>Hugging Face transformer models</b> on telecom data and containerized the model services with Docker.</li>
+          <li>Built an internal <b>RAG chatbot for technical support</b> — multi-source ingestion, chunking, OpenAI embeddings, vector search over ChromaDB.</li>
+          <li>Designed <b>Airflow pipelines</b> pulling from Huawei NCE, SNMP and optical telemetry into a central PostgreSQL database, then tuned that database until it kept up.</li>
+          <li>Built <b>Grafana dashboards with automated alerting</b> for DWDM optical network monitoring.</li>
+        </ul>
+      </div>
+
+      <div class="panel xp">
+        <div class="panel-head"><span>Aug 2025 — Aug 2026</span><span class="hl">research</span></div>
+        <h3>Machine Learning Researcher, intern</h3>
+        <p class="org">Macedonian Academy of Sciences &amp; Arts (MASA) · Skopje</p>
+        <ul>
+          <li>Benchmarked <b>GNNs against pretrained molecular models</b> (MolCLR, ChemBERTa) for ADMET prediction on TDC drug-discovery datasets — ~2,400 controlled training runs with standardized evaluation, the basis of ADMET-Bench.</li>
+          <li>Dataset standardization, <b>RDKit feature engineering</b>, and head-to-head comparison of bio-inspired hyperparameter optimizers (PSO, GA, ABC, TPE) on AUC/ROC.</li>
+        </ul>
+      </div>
+
+      <div class="panel xp">
+        <div class="panel-head"><span>2022 — 2026</span><span class="hl">education</span></div>
+        <h3>B.Sc. Computer Science &amp; Engineering</h3>
+        <p class="org">FCSE · Ss. Cyril &amp; Methodius University · Skopje</p>
+        <ul>
+          <li>Coursework in machine learning, AI (LLMs, NLP, RL, agents), parallel programming with CUDA and MPI, formal languages, and cloud infrastructure with Kubernetes.</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="sec-tag">03</p>
+      <h2>Things I've built</h2>
+    </div>
+    <div class="proj-grid">
+
+      <article class="panel proj">
+        <div class="panel-head"><span>llm agents · in production</span><span class="hl">01</span></div>
+        <h3>Autonomous Marketing Agent</h3>
+        <p class="desc">A marketing department in software, for a real gaming-PC retailer. A <b>7-stage agent pipeline</b> — research, strategy, copy, self-review, repair — writes channel-specific posts across six platforms over a 1,000-product catalog, behind a deterministic policy gate. The interesting part is the <b>fallback chain</b>: primary CLI agent → Groq → self-hosted Ollama (llama.cpp, GGUF) → deterministic template, so generation degrades gracefully instead of failing. Nothing goes public without human approval over Telegram; a rehearsal mode tests real platform calls before publishing.</p>
+        <div class="stack">
+          <span class="chip">FastAPI</span><span class="chip">PostgreSQL+pgvector</span><span class="chip">Ollama</span><span class="chip">Groq</span><span class="chip">Redis</span><span class="chip">Next.js</span><span class="chip">Playwright</span>
+        </div>
+      </article>
+
+      <article class="panel proj">
+        <div class="panel-head"><span>rag · government client</span><span class="hl">02</span></div>
+        <h3>AI Assistant for data.gov.mk</h3>
+        <p class="desc">The national open-data portal, made conversational. A CKAN extension on the <b>OpenAI Assistants API with vector search</b>, fed by an Airflow pipeline covering <b>708 datasets and 1,508 resources</b> — so anyone can ask questions about public data in plain Macedonian. Built for the Ministry of Digitalization, from use-case scoping to production. Grew out of an earlier RAG chatbot I built with Flask and ChromaDB.</p>
+        <div class="stack">
+          <span class="chip">CKAN</span><span class="chip">OpenAI Assistants</span><span class="chip">Airflow</span><span class="chip">Flask</span><span class="chip">ChromaDB</span>
+        </div>
+      </article>
+
+      <article class="panel proj">
+        <div class="panel-head"><span>mlops</span><span class="hl">03</span></div>
+        <h3>IEEE Fraud Detection Pipeline</h3>
+        <p class="desc">End-to-end fraud scoring on the IEEE-CIS dataset. Optuna-tuned LightGBM/XGBoost took <b>AUC from 0.85 to 0.94</b>, served by a real-time FastAPI scorer at <b>~146 ms</b> with three-tier ALLOW/REVIEW/BLOCK routing. Runs as an <b>8-service Docker Compose stack</b>: MLflow for model tracking and versioning, Prometheus and Grafana watching serving latency and throughput.</p>
+        <div class="stack">
+          <span class="chip">LightGBM</span><span class="chip">XGBoost</span><span class="chip">Optuna</span><span class="chip">MLflow</span><span class="chip">FastAPI</span><span class="chip">Prometheus</span>
+        </div>
+        <a class="proj-link" href="https://github.com/stamenovmartin/ML-Fraud-Detection" target="_blank" rel="noopener">stamenovmartin/ML-Fraud-Detection <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+      </article>
+
+      <article class="panel proj">
+        <div class="panel-head"><span>gnn · web scraping</span><span class="hl">04</span></div>
+        <h3>Meetup — Skopje Events</h3>
+        <p class="desc">Skopje has plenty of concerts and events and no single place to find them. This platform scrapes them from multiple sources into one feed, then a <b>GraphSAGE recommender</b> over the event–user graph learns what to surface for whom. The recommender started as a course project and grew into ongoing research.</p>
+        <div class="stack">
+          <span class="chip">Python</span><span class="chip">GraphSAGE</span><span class="chip">PyTorch Geometric</span><span class="chip">Web scraping</span>
+        </div>
+        <a class="proj-link" href="https://github.com/stamenovmartin/Meetup" target="_blank" rel="noopener">stamenovmartin/Meetup <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+      </article>
+
+      <article class="panel proj">
+        <div class="panel-head"><span>llm fine-tuning · rl</span><span class="hl">05</span></div>
+        <h3>GRPO vs SFT on MLQA</h3>
+        <p class="desc">Does reinforcement learning actually beat supervised fine-tuning for extractive QA? A head-to-head of <b>GRPO against SFT</b> on flan-t5-small over the multilingual MLQA benchmark, with an optional RAG inference path using Sentence-BERT and FAISS.</p>
+        <div class="stack">
+          <span class="chip">Transformers</span><span class="chip">GRPO</span><span class="chip">SFT</span><span class="chip">FAISS</span><span class="chip">Sentence-BERT</span>
+        </div>
+        <a class="proj-link" href="https://github.com/stamenovmartin/Improving-Extractive-QA-with-Supervised-Fine-Tuning-and-Group-Relative-Policy-Optimization-on-MLQA" target="_blank" rel="noopener">stamenovmartin/GRPO-MLQA <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+      </article>
+
+      <article class="panel proj">
+        <div class="panel-head"><span>biosignals · with two FCSE colleagues</span><span class="hl">06</span></div>
+        <h3>Biosignal ML on Three PhysioNet Datasets</h3>
+        <p class="desc">Wearable-sensor ML done properly: activity recognition on ScientISST-MOVE (15 subjects, 8 channels at 500 Hz, 6 activities) and stress detection on two Empatica E4 datasets (35 subjects each, up to 4,540 windows × 149 features). Each dataset got its own pipeline — filtering, windowing, NeuroKit2 features, nested GroupKFold — and they meet only at the final comparison. The headline finding: <b>per-subject normalisation beat every model choice</b>, worth +0.21 macro-F1 on its own.</p>
+        <div class="stack">
+          <span class="chip">scikit-learn</span><span class="chip">XGBoost</span><span class="chip">Random Forest</span><span class="chip">NeuroKit2</span><span class="chip">signal processing</span>
+        </div>
+      </article>
+
+      <article class="panel proj">
+        <div class="panel-head"><span>parallel computing</span><span class="hl">07</span></div>
+        <h3>Random Forest, Parallelized with MPI</h3>
+        <p class="desc">Fraud detection where the bottleneck is training time. Parallelized both SMOTE oversampling and Random Forest tree-building across cores with <b>mpi4py</b>, master–worker scatter/gather. On 250,000 transactions, training dropped from <b>11.7 minutes to 1.9 minutes — a ~6× speedup</b> with near-linear scaling up to 12 cores and identical precision, recall and F1.</p>
+        <div class="stack">
+          <span class="chip">MPI / mpi4py</span><span class="chip">Random Forest</span><span class="chip">SMOTE</span><span class="chip">Python</span>
+        </div>
+      </article>
+
+      <article class="panel proj">
+        <div class="panel-head"><span>ml · energy</span><span class="hl">08</span></div>
+        <h3>Smart City Footstep Energy</h3>
+        <p class="desc">Can a city harvest electricity from footsteps? ML analysis of footstep-vibration sensor data across five urban locations: regression to estimate each step's mechanical-energy potential, plus classification of walking patterns where <b>Gradient Boosting won at ~70% accuracy</b>. The useful insight: step dynamics, not foot-traffic volume, decide how much energy a pedestrian zone can actually yield.</p>
+        <div class="stack">
+          <span class="chip">scikit-learn</span><span class="chip">Gradient Boosting</span><span class="chip">PCA</span><span class="chip">pandas</span>
+        </div>
+      </article>
+
+      <article class="panel proj">
+        <div class="panel-head"><span>smaller builds</span><span class="hl">09</span></div>
+        <h3>And a few more</h3>
+        <p class="desc"><b>PsyLearn</b> — a youth wellbeing platform built for the PNUV project. <b>MediaLingo</b> — a media-literacy game in TypeScript that teaches people to read news critically. <b>Measuring Objects</b> — computer vision with OpenCV that measures real-world dimensions from photos.</p>
+        <div class="stack">
+          <span class="chip">JavaScript</span><span class="chip">TypeScript</span><span class="chip">OpenCV</span>
+        </div>
+        <a class="proj-link" href="https://github.com/stamenovmartin?tab=repositories" target="_blank" rel="noopener">all repositories <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section id="research">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="sec-tag">04</p>
+      <h2>Research in the pipeline</h2>
+    </div>
+    <div class="pubs">
+
+      <div class="pub">
+        <span class="role co">co-first author</span>
+        <div>
+          <h3>ADMET-Bench: Task-Dependent Performance of GNNs and Pretrained Models in ADMET Prediction</h3>
+          <p>Five model families, six TDC endpoints, scaffold split — ~2,400 controlled training runs with standardized evaluation. <span class="venue">In preparation for IEEE JBHI.</span></p>
+        </div>
+      </div>
+
+      <div class="pub">
+        <span class="role">first author</span>
+        <div>
+          <h3>Bounded-Depth Ambiguity Detection in Context-Free Grammars</h3>
+          <p>A 50-grammar benchmark, cross-validated by an independent SAT encoding with 100% agreement. <span class="venue">Submitted to ICT Innovations 2026 (Springer), under review.</span></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="toolbox">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="sec-tag">05</p>
+      <h2>The toolbox</h2>
+    </div>
+    <div class="skill-cols">
+
+      <div class="panel skill-col">
+        <h3>Runs in production</h3>
+        <span class="ctx mono">the telecom stack, used daily</span>
+        <div class="stack">
+          <span class="chip">Apache Airflow</span><span class="chip">Kubernetes</span><span class="chip">Docker</span><span class="chip">PostgreSQL</span><span class="chip">FastAPI</span><span class="chip">Grafana</span><span class="chip">Prometheus</span><span class="chip">Zabbix</span><span class="chip">OpenStack</span><span class="chip">NETCONF / SNMP</span><span class="chip">Linux</span><span class="chip">Bash</span>
+        </div>
+      </div>
+
+      <div class="panel skill-col">
+        <h3>Runs on the research bench</h3>
+        <span class="ctx mono">training, tuning, evaluating</span>
+        <div class="stack">
+          <span class="chip">PyTorch</span><span class="chip">PyTorch Geometric</span><span class="chip">Hugging Face</span><span class="chip">scikit-learn</span><span class="chip">XGBoost</span><span class="chip">LightGBM</span><span class="chip">Optuna</span><span class="chip">RDKit</span><span class="chip">MLflow</span><span class="chip">CUDA</span><span class="chip">MPI</span>
+        </div>
+      </div>
+
+      <div class="panel skill-col">
+        <h3>Runs after hours</h3>
+        <span class="ctx mono">the genai side-project stack</span>
+        <div class="stack">
+          <span class="chip">Ollama / llama.cpp</span><span class="chip">Groq</span><span class="chip">OpenAI API</span><span class="chip">Anthropic API</span><span class="chip">pgvector</span><span class="chip">ChromaDB</span><span class="chip">Redis</span><span class="chip">TypeScript</span><span class="chip">Next.js</span><span class="chip">Playwright</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="contact" id="contact">
+  <div class="wrap">
+    <p class="sec-tag" style="justify-content:center">06</p>
+    <h2 class="glow">Say hello</h2>
+    <p class="lead">Open to AI engineering roles and research collaborations — or just a good conversation about agents that touch real infrastructure. Email is fastest; I usually reply the same day.</p>
+    <div class="contact-links">
+      <a class="btn btn-a" href="mailto:martin.stamenov03@gmail.com">martin.stamenov03@gmail.com</a>
+      <a class="btn" href="https://github.com/stamenovmartin" target="_blank" rel="noopener">github</a>
+      <a class="btn" href="https://www.linkedin.com/in/martin-stamenov-250ab5200" target="_blank" rel="noopener">linkedin</a>
+    </div>
+    <div class="footer">
+      <span>Martin Stamenov · Skopje, North Macedonia</span>
+      <span>hand-built · one HTML file · no framework</span>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+(function(){
+  var tg=document.querySelector('.nav-toggle'),nl=document.querySelector('.nav-links');
+  if(tg&&nl){
+    tg.addEventListener('click',function(){var o=nl.classList.toggle('open');tg.setAttribute('aria-expanded',o);});
+    nl.addEventListener('click',function(e){if(e.target.tagName==='A'){nl.classList.remove('open');tg.setAttribute('aria-expanded','false');}});
+  }
+})();
+(function(){
+  var cmds=[
+    "optical telemetry ─▸ airflow ─▸ postgres ─▸ grafana  │  streaming",
+    "prompt ─▸ 7-stage agent ─▸ policy gate ─▸ human  │  approved",
+    "molecule ─▸ GNN ─▸ ADMET score  │  run 2,400 / 2,400",
+    "transaction ─▸ model ─▸ verdict: REVIEW  │  146 ms",
+    "question ─▸ RAG ─▸ 708 open datasets  │  answered in Macedonian"
+  ];
+  var el=document.getElementById('term-text');
+  if(!el)return;
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce){el.textContent=cmds[0];return;}
+  var ci=0,pos=0,mode='type';
+  function tick(){
+    var cmd=cmds[ci];
+    if(mode==='type'){
+      if(pos<=cmd.length){el.textContent=cmd.slice(0,pos);pos++;setTimeout(tick,34);}
+      else{mode='hold';setTimeout(tick,2600);}
+    }else if(mode==='hold'){
+      mode='erase';setTimeout(tick,0);
+    }else{
+      if(pos>0){pos-=3;el.textContent=cmd.slice(0,Math.max(pos,0));setTimeout(tick,12);}
+      else{ci=(ci+1)%cmds.length;mode='type';pos=0;setTimeout(tick,420);}
+    }
+  }
+  setTimeout(tick,500);
+})();
+</script>
+
+
+<script>
+(function(){
+  var cv=document.getElementById('core');
+  if(!cv||!cv.getContext)return;
+  var ctx=cv.getContext('2d');
+  var dpr=Math.min(window.devicePixelRatio||1,3);
+  var SIZE=Math.min(600,Math.floor(window.innerWidth*0.94)), R=SIZE/3, F=SIZE*1.07, C=SIZE/2;
+  cv.width=SIZE*dpr; cv.height=SIZE*dpr;
+  cv.style.width=SIZE+'px'; cv.style.height=SIZE+'px';
+  ctx.scale(dpr,dpr);
+
+  // Fibonacci sphere
+  var N=120, pts=[];
+  var ga=Math.PI*(3-Math.sqrt(5));
+  for(var i=0;i<N;i++){
+    var y=1-(i/(N-1))*2;
+    var rad=Math.sqrt(1-y*y);
+    var th=ga*i;
+    pts.push({x:Math.cos(th)*rad*R, y:y*R, z:Math.sin(th)*rad*R,
+              amber:(i%7===0), ph:Math.random()*6.28});
+  }
+  // static topology: connect near neighbours in 3D
+  var edges=[], MAXD=0.46*R, deg=new Array(N).fill(0);
+  for(var a=0;a<N;a++)for(var b=a+1;b<N;b++){
+    if(deg[a]>5||deg[b]>5)continue;
+    var dx=pts[a].x-pts[b].x, dy=pts[a].y-pts[b].y, dz=pts[a].z-pts[b].z;
+    if(Math.sqrt(dx*dx+dy*dy+dz*dz)<MAXD){edges.push([a,b]);deg[a]++;deg[b]++;}
+  }
+
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var running=true, t=0;
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(en){running=en[0].isIntersecting;},{threshold:0}).observe(cv);
+  }
+
+  function frame(){
+    t+=0.0035;
+    var ry=t, rx=0.35+Math.sin(t*0.6)*0.12;
+    var cy=Math.cos(ry), sy=Math.sin(ry), cx=Math.cos(rx), sx=Math.sin(rx);
+    var proj=[];
+    for(var i=0;i<N;i++){
+      var p=pts[i];
+      var x1=p.x*cy+p.z*sy, z1=-p.x*sy+p.z*cy;      // rotate Y
+      var y2=p.y*cx-z1*sx,  z2=p.y*sx+z1*cx;        // rotate X
+      var sc=F/(F+z2);
+      proj.push({x:C+x1*sc, y:C+y2*sc, d:(z2+R)/(2*R), sc:sc, amber:p.amber, ph:p.ph});
+    }
+    ctx.clearRect(0,0,SIZE,SIZE);
+    // edges
+    for(var e=0;e<edges.length;e++){
+      var A=proj[edges[e][0]], B=proj[edges[e][1]];
+      var depth=1-((A.d+B.d)/2);                     // front = bright
+      if(depth<0.12)continue;
+      var amber=(A.amber||B.amber);
+      ctx.strokeStyle=amber?'rgba(255,178,94,'+(0.44*depth)+')':'rgba(63,216,255,'+(0.5*depth)+')';
+      ctx.lineWidth=0.7+depth*0.6;
+      ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(B.x,B.y);ctx.stroke();
+    }
+    // nodes
+    for(var i=0;i<N;i++){
+      var P=proj[i], depth=1-P.d;
+      if(depth<0.1)continue;
+      var r=(1.1+depth*1.9)*(1+0.18*Math.sin(t*2.2+P.ph));
+      ctx.fillStyle=P.amber?'rgba(255,196,110,'+(0.45+0.55*depth)+')':'rgba(120,225,255,'+(0.4+0.6*depth)+')';
+      ctx.beginPath();ctx.arc(P.x,P.y,r,0,6.2832);ctx.fill();
+    }
+  }
+  function loop(){
+    if(running)frame();
+    requestAnimationFrame(loop);
+  }
+  if(reduce){frame();}else{loop();}
+})();
+</script>
+
+<script>
+(function(){
+  var cv=document.getElementById('field');
+  if(!cv||!cv.getContext)return;
+  var ctx=cv.getContext('2d');
+  var dpr=Math.min(window.devicePixelRatio||1,2.5);
+  var W,H,P=[],CL=[],LINK=150,SIG=[],WAVE=null,lastEpoch=-1;
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function build(){
+    W=window.innerWidth;H=window.innerHeight;
+    cv.width=W*dpr;cv.height=H*dpr;
+    cv.style.width=W+'px';cv.style.height=H+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    var K=Math.max(5,Math.min(10,Math.round(W/220)));
+    CL=[];
+    for(var c=0;c<K;c++){
+      CL.push({x:(c+0.5+((Math.random()-.5)*.6))*(W/K),y:Math.random()*H,
+               a:Math.random()*6.2832,sp:0.05+Math.random()*0.08});
+    }
+    var n=Math.max(55,Math.min(140,Math.round(W*H/15000)));
+    // what the network learns each epoch: the letter M
+    var mh=Math.min(H*0.52,470), mw=mh*1.05;
+    var ox=W/2-mw/2, oy=H/2-mh/2;
+    var pts=[[ox,oy+mh],[ox,oy],[ox+mw/2,oy+mh*0.58],[ox+mw,oy],[ox+mw,oy+mh]];
+    var segs=[],total=0;
+    for(var q=0;q<4;q++){
+      var dx=pts[q+1][0]-pts[q][0],dy=pts[q+1][1]-pts[q][1];
+      var L=Math.sqrt(dx*dx+dy*dy);segs.push(L);total+=L;
+    }
+    var TG=[];
+    for(var i=0;i<n;i++){
+      var d=total*i/(n-1), q=0;
+      while(q<3&&d>segs[q]){d-=segs[q];q++;}
+      var f=segs[q]?d/segs[q]:0;
+      TG.push({x:pts[q][0]+(pts[q+1][0]-pts[q][0])*f,
+               y:pts[q][1]+(pts[q+1][1]-pts[q][1])*f});
+    }
+    P=[];SIG=[];WAVE=null;
+    for(var i=0;i<n;i++){
+      var c=i%K;
+      var ti=(i*37)%n;                                   // scrambled assignment — organic assembly
+      P.push({c:c,x:CL[c].x+(Math.random()-.5)*260,y:CL[c].y+(Math.random()-.5)*260,
+              vx:0,vy:0,a:Math.random()*6.2832,
+              ph:Math.random()*6.2832,amber:Math.random()<0.14,flash:0,
+              hub:(i<K),tx:TG[ti].x,ty:TG[ti].y,ti:ti});
+    }
+  }
+  build();
+  var rto;window.addEventListener('resize',function(){clearTimeout(rto);rto=setTimeout(build,200);});
+
+  function ctrl(A,B,i,j){
+    var lo=Math.min(i,j),hi=Math.max(i,j);
+    var k=(((lo*31+hi*17)%7)-3)*0.14;
+    var mx=(A.x+B.x)/2,my=(A.y+B.y)/2;
+    var dx=B.x-A.x,dy=B.y-A.y;
+    return {x:mx-dy*k,y:my+dx*k};
+  }
+  function bez(A,C,B,t){
+    var u=1-t;
+    return {x:u*u*A.x+2*u*t*C.x+t*t*B.x, y:u*u*A.y+2*u*t*C.y+t*t*B.y};
+  }
+  function smooth(a,b,x){x=Math.max(0,Math.min(1,(x-a)/(b-a)));return x*x*(3-2*x);}
+  function neighborOf(i,link){
+    var opts=[];
+    for(var j=0;j<P.length;j++){
+      if(j===i)continue;
+      var dx=P[i].x-P[j].x,dy=P[i].y-P[j].y;
+      if(dx*dx+dy*dy<link*link)opts.push(j);
+    }
+    return opts.length?opts[(Math.random()*opts.length)|0]:-1;
+  }
+
+  // learning cycle: wander → converge & fire together → epoch wave → release
+  var T=26, t=0;
+  function envelope(){
+    var u=t%T;
+    return smooth(15,18,u)*(1-smooth(21,23.5,u));
+  }
+
+  function step(){
+    t+=0.016;
+    var e=envelope();
+    var link=LINK*(1+0.6*e);
+    var cx=0,cy=0;
+    for(var c=0;c<CL.length;c++){cx+=CL[c].x;cy+=CL[c].y;}
+    cx/=CL.length;cy/=CL.length;
+
+    for(var c=0;c<CL.length;c++){
+      var g=CL[c];
+      g.a+=(Math.random()-.5)*0.04;
+      g.x+=Math.cos(g.a)*g.sp;
+      g.y+=Math.sin(g.a)*g.sp;
+      if(g.x<-80)g.x=W+80; if(g.x>W+80)g.x=-80;
+      if(g.y<-80)g.y=H+80; if(g.y>H+80)g.y=-80;
+    }
+    for(var i=0;i<P.length;i++){
+      var p=P[i],g=CL[p.c];
+      p.a+=(Math.random()-.5)*0.06;
+      // speaking: once formed, the letter undulates like a voice waveform
+      var tx=p.tx+Math.sin(t*2.6+p.ti*0.45)*6*e;
+      var ty=p.ty+Math.cos(t*3.1+p.ti*0.6)*4*e;
+      p.vx+=Math.cos(p.a)*0.012*(1-e)+(g.x-p.x)*0.0006*(1-e)+(tx-p.x)*0.016*e;
+      p.vy+=Math.sin(p.a)*0.012*(1-e)+(g.y-p.y)*0.0006*(1-e)+(ty-p.y)*0.016*e;
+      var damp=0.96-0.05*e;
+      p.vx*=damp;p.vy*=damp;
+      p.x+=p.vx;p.y+=p.vy;
+      p.flash*=0.93;
+      if(e>0.15&&Math.random()<0.01*e)p.flash=Math.max(p.flash,0.85);
+    }
+    var cap=26+Math.round(44*e);
+    var tries=1+(e>0.25?2:0);                      // during learning, fire in volleys
+    for(var tr=0;tr<tries;tr++){
+      if(SIG.length<cap&&Math.random()<0.45+2.4*e){
+        var i=(Math.random()*P.length)|0, j=neighborOf(i,link);
+        if(j>=0)SIG.push({a:i,b:j,t:0,sp:0.016+Math.random()*0.02});
+      }
+    }
+    for(var k=SIG.length-1;k>=0;k--){
+      var sg=SIG[k];
+      sg.t+=sg.sp;
+      if(sg.t>=1){
+        P[sg.b].flash=1;
+        if(Math.random()<0.65+0.3*e&&SIG.length<cap){
+          var nx=neighborOf(sg.b,link);
+          if(nx>=0)SIG.push({a:sg.b,b:nx,t:0,sp:0.016+Math.random()*0.02});
+        }
+        SIG.splice(k,1);
+      }
+    }
+    // epoch complete: one synchronised wave through the whole network
+    var epoch=Math.floor(t/T);
+    var u=t%T;
+    if(u>20.5&&epoch!==lastEpoch){
+      lastEpoch=epoch;
+      WAVE={x:cx,y:cy,r:0,max:Math.sqrt(W*W+H*H)};
+    }
+    if(WAVE){
+      WAVE.r+=11;
+      for(var i=0;i<P.length;i++){
+        var dx=P[i].x-WAVE.x,dy=P[i].y-WAVE.y;
+        var d=Math.sqrt(dx*dx+dy*dy);
+        if(Math.abs(d-WAVE.r)<30)P[i].flash=Math.max(P[i].flash,0.95);
+      }
+      if(WAVE.r>WAVE.max)WAVE=null;
+    }
+  }
+
+  function draw(){
+    var e=envelope();
+    var link=LINK*(1+0.6*e);
+    ctx.clearRect(0,0,W,H);
+    ctx.globalCompositeOperation='lighter';            // additive glow — holographic
+    // dendrites
+    for(var i=0;i<P.length;i++){
+      for(var j=i+1;j<P.length;j++){
+        var A=P[i],B=P[j];
+        var dx=A.x-B.x; if(dx>link||dx<-link)continue;
+        var dy=A.y-B.y; if(dy>link||dy<-link)continue;
+        var d=Math.sqrt(dx*dx+dy*dy);
+        if(d<link){
+          var al=(1-d/link)*(0.13+0.32*e);
+          var C=ctrl(A,B,i,j);
+          ctx.strokeStyle=(A.amber||B.amber)?'rgba(255,178,94,'+al+')':'rgba(63,216,255,'+al+')';
+          ctx.lineWidth=1;
+          ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.quadraticCurveTo(C.x,C.y,B.x,B.y);ctx.stroke();
+        }
+      }
+    }
+    // impulses
+    for(var k=0;k<SIG.length;k++){
+      var sg=SIG[k],A=P[sg.a],B=P[sg.b];
+      var C=ctrl(A,B,sg.a,sg.b);
+      var amber=A.amber||B.amber;
+      var t0=Math.max(0,sg.t-0.22);
+      ctx.strokeStyle=amber?'rgba(255,196,110,.75)':'rgba(140,230,255,.8)';
+      ctx.lineWidth=2;
+      ctx.beginPath();
+      var p0=bez(A,C,B,t0);
+      ctx.moveTo(p0.x,p0.y);
+      for(var q=1;q<=4;q++){
+        var pq=bez(A,C,B,t0+(sg.t-t0)*q/4);
+        ctx.lineTo(pq.x,pq.y);
+      }
+      ctx.stroke();
+      var hd=bez(A,C,B,sg.t);
+      var gr=ctx.createRadialGradient(hd.x,hd.y,0,hd.x,hd.y,9);
+      gr.addColorStop(0,amber?'rgba(255,230,180,.95)':'rgba(220,250,255,.95)');
+      gr.addColorStop(1,amber?'rgba(255,178,94,0)':'rgba(63,216,255,0)');
+      ctx.fillStyle=gr;
+      ctx.beginPath();ctx.arc(hd.x,hd.y,9,0,6.2832);ctx.fill();
+      ctx.fillStyle=amber?'rgba(255,235,195,.95)':'rgba(230,252,255,.95)';
+      ctx.beginPath();ctx.arc(hd.x,hd.y,2.8,0,6.2832);ctx.fill();
+    }
+    // neurons
+    for(var i=0;i<P.length;i++){
+      var p=P[i];
+      var pulse=0.5+0.5*Math.sin(t*1.6+p.ph);
+      var base=p.hub?4.4:2.1;
+      var r=base+0.9*pulse+p.flash*3.5;
+      var al=(p.amber?0.4:0.34)+0.22*pulse+p.flash*0.6;
+      var col=p.amber?'255,196,110':'120,225,255';
+      if(p.hub){
+        ctx.strokeStyle='rgba('+col+','+(0.14+0.12*pulse+0.2*e)+')';
+        ctx.lineWidth=0.8;
+        for(var st=0;st<5;st++){
+          var an=p.ph+st*1.2566+t*0.12;
+          ctx.beginPath();
+          ctx.moveTo(p.x+Math.cos(an)*(r+1),p.y+Math.sin(an)*(r+1));
+          ctx.lineTo(p.x+Math.cos(an)*(r+10+4*pulse),p.y+Math.sin(an)*(r+10+4*pulse));
+          ctx.stroke();
+        }
+        var gg=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,r+13);
+        gg.addColorStop(0,'rgba('+col+','+(0.3+0.3*pulse)+')');
+        gg.addColorStop(1,'rgba('+col+',0)');
+        ctx.fillStyle=gg;
+        ctx.beginPath();ctx.arc(p.x,p.y,r+13,0,6.2832);ctx.fill();
+      }
+      ctx.fillStyle='rgba('+col+','+Math.min(al,1)+')';
+      ctx.beginPath();ctx.arc(p.x,p.y,r,0,6.2832);ctx.fill();
+      if(p.flash>0.06){
+        ctx.strokeStyle='rgba('+col+','+(p.flash*0.5)+')';
+        ctx.lineWidth=1;
+        ctx.beginPath();ctx.arc(p.x,p.y,6+(1-p.flash)*14,0,6.2832);ctx.stroke();
+      }
+    }
+    // epoch wave rings
+    if(WAVE){
+      var wa=Math.max(0,1-WAVE.r/WAVE.max);
+      ctx.strokeStyle='rgba(63,216,255,'+(0.28*wa)+')';
+      ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(WAVE.x,WAVE.y,WAVE.r,0,6.2832);ctx.stroke();
+      ctx.strokeStyle='rgba(255,178,94,'+(0.16*wa)+')';
+      ctx.lineWidth=1;
+      ctx.beginPath();ctx.arc(WAVE.x,WAVE.y,Math.max(0,WAVE.r-24),0,6.2832);ctx.stroke();
+    }
+    ctx.globalCompositeOperation='source-over';
+  }
+  var vis=!document.hidden;
+  document.addEventListener('visibilitychange',function(){vis=!document.hidden;});
+  function loop(){
+    if(vis){step();draw();}
+    requestAnimationFrame(loop);
+  }
+  if(reduce){draw();}else{loop();}
+})();
+</script>
+</body>
+</html>
