@@ -239,7 +239,7 @@ main,nav,header,footer{position:relative;z-index:1}
 /* ---------- nav ---------- */
 nav{
   position:fixed;inset:0 0 auto 0;z-index:50;
-  background:rgba(var(--v-rgb),.78);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  background:rgba(var(--v-rgb),.78);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
   border-bottom:1px solid rgba(var(--c-rgb),.18);
 }
 .nav-in{max-width:var(--maxw);margin:0 auto;padding:13px 24px;display:flex;align-items:center;gap:26px}
@@ -636,6 +636,16 @@ h2{font-size:clamp(36px,6.4vw,86px);font-weight:700;letter-spacing:.01em;text-tr
   .now{grid-template-columns:1fr}
   .radar{width:56px;height:56px}
 }
+/* ---------- performance hints ---------- */
+section{content-visibility:auto;contain-intrinsic-size:900px}
+header,#about{content-visibility:visible}
+.panel,.mq-track,.holo-rings,.hero-copy,.wordmark{transform:translateZ(0)}
+.field{contain:strict}
+@media(max-width:960px){
+  .field{opacity:.55}
+  .holo-rings{opacity:.5}
+}
+
 </style>
 </head>
 <body>
@@ -1053,7 +1063,6 @@ h2{font-size:clamp(36px,6.4vw,86px);font-weight:700;letter-spacing:.01em;text-tr
   <div class="wordmark" id="wordmark" aria-hidden="true"><span class="wm-o">MARTIN STAMENOV</span><span class="wm-f">MARTIN STAMENOV</span></div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script>
 var REDUCE=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 var FINE=window.matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -1066,20 +1075,16 @@ window.addEventListener('pointermove',function(e){
 document.documentElement.addEventListener('pointerleave',function(){M.has=false;});
 function heroH(){return HERO.offsetHeight;}
 
-/* ---- smooth scroll (Lenis); native fallback if the CDN is blocked ---- */
+/* ---- native smooth scroll: lighter than Lenis, no permanent RAF loop ---- */
 var lenis=null;
-if(!REDUCE&&window.Lenis){
-  lenis=new Lenis({lerp:0.085,smoothWheel:true});
-  (function raf(t){lenis.raf(t);requestAnimationFrame(raf);})(performance.now());
-}
 document.addEventListener('click',function(e){
   var a=e.target.closest('a[href^="#"]');
   if(!a)return;
   var id=a.getAttribute('href');var el=id==='#'?null:document.querySelector(id);
   if(!el)return;
   e.preventDefault();
-  if(lenis)lenis.scrollTo(id==='#top'?0:el,{offset:-70,duration:1.4});
-  else el.scrollIntoView({behavior:REDUCE?'auto':'smooth'});
+  if(id==='#top')window.scrollTo({top:0,behavior:REDUCE?'auto':'smooth'});
+  else el.scrollIntoView({behavior:REDUCE?'auto':'smooth',block:'start'});
   if(id==='#main'){el.setAttribute('tabindex','-1');el.focus({preventScroll:true});}
 });
 
@@ -1090,17 +1095,16 @@ document.addEventListener('click',function(e){
   var seen=false;try{seen=sessionStorage.getItem('booted')==='1';}catch(e){}
   if(REDUCE||seen){boot.remove();ready();return;}
   try{sessionStorage.setItem('booted','1');}catch(e){}
-  if(lenis)lenis.stop();
   var bar=document.getElementById('boot-bar'),pct=document.getElementById('boot-pct'),msg=document.getElementById('boot-msg');
   var msgs=['initializing neural core','loading weights','linking 530+ endpoints','calibrating signal'];
-  var t0=performance.now(),D=1300;
+  var t0=performance.now(),D=420;
   (function step(now){
     var p=Math.min(1,(now-t0)/D),e=1-Math.pow(1-p,3);
     bar.style.transform='scaleX('+e+')';
     pct.textContent=('00'+Math.round(e*100)).slice(-3);
     msg.textContent=msgs[Math.min(msgs.length-1,Math.floor(p*msgs.length))];
     if(p<1)requestAnimationFrame(step);
-    else{boot.classList.add('done');ready();if(lenis)lenis.start();setTimeout(function(){boot.remove();},900);}
+    else{boot.classList.add('done');ready();setTimeout(function(){boot.remove();},500);}
   })(t0);
 })();
 
@@ -1217,6 +1221,7 @@ function countUp(el){
 /* ---- magnetic buttons + tilting cards (fine pointers only) ---- */
 (function(){
   if(REDUCE||!FINE)return;
+  var lowPower=(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4)||(navigator.deviceMemory&&navigator.deviceMemory<=4);
   document.querySelectorAll('.magnetic').forEach(function(el){
     var inner=el.querySelector('span');
     el.addEventListener('pointermove',function(e){
@@ -1226,6 +1231,7 @@ function countUp(el){
     });
     el.addEventListener('pointerleave',function(){el.style.transform='';if(inner)inner.style.transform='';});
   });
+  if(lowPower||innerWidth<1100)return;
   document.querySelectorAll('.tilt').forEach(function(el){
     var g=document.createElement('span');g.className='glare';g.setAttribute('aria-hidden','true');el.appendChild(g);
     el.addEventListener('pointermove',function(e){
@@ -1317,7 +1323,7 @@ function countUp(el){
   }
 })();
 
-/* ---- main ticker: cursor, hero parallax + scroll exit, letters, marquees, progress, timeline ---- */
+/* ---- optimized main ticker: cursor, hero parallax, marquees, progress, timeline ---- */
 (function(){
   var dot=document.getElementById('cur-dot'),ring=document.getElementById('cur-ring'),label=document.getElementById('cur-label');
   var prog=document.getElementById('progress'),rings=document.getElementById('rings'),copy=document.getElementById('hero-copy');
@@ -1353,7 +1359,11 @@ function countUp(el){
 
   function pad(n){n=Math.max(0,Math.round(n));return ('000'+n).slice(-4);}
 
-  function tick(){
+  var lastUiFrame=0,UI_INTERVAL=1000/60;
+  function tick(now){
+    if(document.hidden){requestAnimationFrame(tick);return;}
+    if(now-lastUiFrame<UI_INTERVAL){requestAnimationFrame(tick);return;}
+    lastUiFrame=now;
     var y=window.scrollY,dv=y-lastY;lastY=y;
     vel+=(dv-vel)*0.12;
     if(dv>0.5)dir=1;else if(dv<-0.5)dir=-1;
@@ -1411,7 +1421,7 @@ function countUp(el){
   var cv=document.getElementById('field');
   if(!cv.getContext)return;
   var ctx=cv.getContext('2d');
-  var W=1,H=1,P=[],CL=[],TG=[],BY=[],LINK=150,SIG=[],WAVES=[],MR=170;
+  var W=1,H=1,P=[],CL=[],TG=[],BY=[],LINK=135,SIG=[],WAVES=[],MR=160;
   var PALS={
     dark:{c:'63,216,255',c2:'120,225,255',c3:'140,230,255',chl:'220,250,255',a:'255,178,94',a2:'255,196,110',ahl:'255,230,180',err:'255,110,90',ok:'111,227,167',mute:'91,154,178',comp:'lighter'},
     light:{c:'11,106,147',c2:'8,90,128',c3:'11,106,147',chl:'4,60,90',a:'255,106,26',a2:'232,90,15',ahl:'200,70,0',err:'214,48,40',ok:'19,122,74',mute:'70,112,127',comp:'source-over'}
@@ -1423,7 +1433,7 @@ function countUp(el){
   var t=0,eG=0,waveSent=true,drag=false,PTR={},PIN=4,lmx=0,lmy=0;
 
   function fit(){
-    var dpr=Math.min(window.devicePixelRatio||1,2);
+    var dpr=Math.min(window.devicePixelRatio||1,1.5);
     var nw=HERO.clientWidth,nh=HERO.clientHeight,kx=nw/W,ky=nh/H;
     cv.width=Math.round(nw*dpr);cv.height=Math.round(nh*dpr);
     ctx.setTransform(dpr,0,0,dpr,0,0);
@@ -1436,7 +1446,7 @@ function countUp(el){
     targets();
   }
   function targets(){
-    var n=P.length||Math.max(60,Math.min(120,Math.round(W*H/15000)));
+    var n=P.length||Math.max(34,Math.min(64,Math.round(W*H/26000)));
     var wide=W>960,cx=wide?W*0.7:W/2,cy=H/2+(wide?10:0);
     var mh=wide?Math.min(H*0.56,500,W*0.34/1.05):Math.min(H*0.52,470),mw=mh*1.05,ox=cx-mw/2,oy=cy-mh/2;
     MC={x:cx,y:cy,ox:ox,oy:oy,w:mw,h:mh};
@@ -1461,7 +1471,7 @@ function countUp(el){
   }
   function build(){
     W=HERO.clientWidth;H=HERO.clientHeight;
-    var K=Math.max(5,Math.min(10,Math.round(W/220)));
+    var K=Math.max(4,Math.min(7,Math.round(W/280)));
     for(var c=0;c<K;c++)CL.push({x:(c+0.5+((Math.random()-.5)*.6))*(W/K),y:Math.random()*H,a:Math.random()*6.2832,sp:0.05+Math.random()*0.08});
     var n=targets(),perm=[];
     for(var i=0;i<n;i++)perm.push(i);
@@ -1863,9 +1873,15 @@ function countUp(el){
 
   if(REDUCE){P.forEach(function(p){p.w=1;p.x=p.tx;p.y=p.ty;});eG=1;draw();return;}
   setTimeout(function(){assemble(0.8,9,0.014);},1500);   // first run: ~9 epochs of visible training
-  var visible=true;
+  var visible=true,lastCanvasFrame=0,CANVAS_INTERVAL=1000/30;
   if('IntersectionObserver' in window)new IntersectionObserver(function(en){visible=en[0].isIntersecting;}).observe(HERO);
-  (function loop(){if(visible&&!document.hidden){step();draw();}requestAnimationFrame(loop);})();
+  (function loop(now){
+    if(visible&&!document.hidden&&now-lastCanvasFrame>=CANVAS_INTERVAL){
+      lastCanvasFrame=now-(now-lastCanvasFrame)%CANVAS_INTERVAL;
+      step();draw();
+    }
+    requestAnimationFrame(loop);
+  })(performance.now());
 })();
 
 /* ---- scroll-lit statement, stacking cards, magnetic "say hello", Skopje clock ---- */
@@ -1894,7 +1910,10 @@ function countUp(el){
   var helloVis=false;
   if(hello&&'IntersectionObserver' in window)new IntersectionObserver(function(en){helloVis=en[0].isIntersecting;}).observe(hello);
 
-  (function loop(){
+  var lastFxFrame=0,FX_INTERVAL=1000/30;
+  (function loop(now){
+    if(document.hidden||now-lastFxFrame<FX_INTERVAL){requestAnimationFrame(loop);return;}
+    lastFxFrame=now;
     var vh=innerHeight;
     if(words.length&&!REDUCE){
       var r=bw.getBoundingClientRect();
